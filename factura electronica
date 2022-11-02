@@ -1,0 +1,158 @@
+
+client = Client(url_ws)
+
+"""
+*---------------------- Variables necesarias para la
+*---------------------- construcción de la cabecera
+*---------------------- del comprobante.
+"""
+
+#Variable con la fecha del comprobante
+fecha="2018-04-26"
+#Variable con la hora del comprobante
+hora="11:00:00"
+#Variable con el formato necesario para la fecha y hora del comprobante
+fechaComprobante = fecha+"T"+hora
+#Monto con el subtotal sin IVA del comprobante
+subtotal = 100;
+#Monto con el total con IVA del comprobante
+total=116;
+#Variable para especificar el tipo de comprobante que se generará E=Egreso(Nota de crédito) o I=Ingreso(Factura Estandar)
+tipoComp = "I"
+#Variable con el Código Postal del lugar de expedición del comprobante
+lugarExp = "06600"
+#Variable con la Forma de pago del comprobante (CONSULTAR CATÁLOGO DEL SAT PARA ESTE CAMPO)
+formaPago = "01"
+#Variable con la Condición de pago del comprobante (NO ES OBLIGATORIA)
+condicionPago = "A la recepcion"
+#Variable con el Método de pago del comprobante (CONSULTAR CATÁLOGO DEL SAT PARA ESTE CAMPO)
+metodoPago = "PUE"
+#Variable con la divisa con la que se generó el comprobante (MXN para pesos mexicanos)
+moneda = "MXN"
+#Variable con la serie del comprobante
+serie = "FA0000"
+#Variable con el folio del comprobante
+folio = "0001"
+
+
+# Arreglo que contiene los datos de la cabecera
+
+Comprobante = client.factory.create('ns2:Comprobante')
+
+Comprobante.comprobante = {
+    "fecha": fechaComprobante,
+    "subTotal": subtotal,
+    "total": total,
+    "tipoDeComprobante": tipoComp,
+    "lugarExpedicion": lugarExp,
+    "formaDePago": formaPago,
+    "condicionesDePago": condicionPago,
+    "metodoDePago": metodoPago,
+    "moneda": moneda,
+    "serie": serie,
+    "folio": folio
+}
+
+
+"""
+*---------------------- Variables necesarias para la
+*---------------------- construcción de los datos
+*---------------------- del emisor del comprobante.
+"""
+
+#Variable con el RFC del emisor
+emisorRFC = "ACO111007GH5"
+#Variable que contiene la clave del Regimen del emisor (CONSULTAR CATÁLOGO DEL SAT PARA ESTE CAMPO)
+emisorReg = 601
+#Variable con el Nombre o Razón Social del Emisor
+emisorRazon = "Auribox Consulting"
+
+# Arreglo que contiene los datos obligatorios del emisor
+
+Emisor = client.factory.create('ns2:Emisor')
+
+Emisor = {
+    "emisorRFC" : emisorRFC,
+    "emisorRegimen" : emisorReg,
+    "nombre" : emisorRazon
+}
+
+
+"""
+*---------------------- Variables necesarias para la
+*---------------------- construcción de los datos
+*---------------------- del receptor del comprobante.
+"""
+
+#Variable con el RFC del receptor
+rfcRecep = "XAXX010101000"
+#Variable con el Nombre o Razón Social del receptor
+razonRecep = "Cliente Mostrador"
+#Variable con el Uso CFDI del comprobante (CONSULTAR CATÁLOGO DEL SAT PARA ESTE CAMPO)
+usoCFDI = "G03"
+
+# Arreglo que contiene los datos obligatorios del receptor
+
+Receptor = client.factory.create('ns2:Receptor')
+
+Receptor = {
+    "rfc" : rfcRecep,
+    "nombre" : razonRecep,
+    "usoCFDI" : usoCFDI
+}
+
+
+"""
+*---------------------- Variables necesarias para la
+*---------------------- construcción del arreglo de
+*---------------------- conceptos(productos o servicios) del comprobante.
+*---------------------- NOTA: SE UTILIZA SOLAMENTE UN CONCEPTO
+*---------------------- PARA FINES PRÁCTICOS, PERO SE DEBERÁ
+*---------------------- REPLICAR LA FUNCIONALIDAD PARA CADA
+*---------------------- PRODUCTOS O SERVICIOS QUE SE AÑADIDO
+*---------------------- AL ARREGLO DE CONCEPTOS.
+"""
+
+#Variable con el nombre o descripción del concepto
+descrip = "Producto prueba"
+#Variable con la cantidad del producto
+cant = 1
+#Variable con el valor unitario de cada producto (SIN IVA)
+valorUnit = 100
+#Variable con el importe total obtenido en la multiplicación del Valor unitario y la Cantidad
+importe = valorUnit * cant
+#Variable con el importe del impuesto del producto
+importeImp = 16;
+#Variable tipo de impuesto del producto (CONSULTAR INFORMACIÓN DEL SAT PARA ESTE CAMPO)
+impuesto = "002"
+#Variable con la tasa del impuesto del producto (CONSULTAR INFORMACIÓN DEL SAT PARA ESTE CAMPO)
+tasa = 0.16;
+#Variable con la clave de la unidad del producto (CONSULTAR CATÁLOGO DEL SAT PARA ESTE CAMPO)
+unidad = "H87"
+#Variable con el tipo de factor del producto (CONSULTAR INFORMACIÓN DEL SAT PARA ESTE CAMPO)
+tipoFactor = "Tasa"
+#Variable con la ClaveProdServ del producto (CONSULTAR CATÁLOGO DEL SAT PARA ESTE CAMPO)
+clavePS = "01010101"
+#Variable con el monto base del producto (SIN IVA)
+base = 100
+
+
+# Arreglo que contiene los datos obligatorios de los conceptos
+
+Conceptos = client.factory.create('ns2:Conceptos')
+
+Conceptos = [
+        {
+            "descripcion" : descrip,
+            "cantidad" : cant,
+            "valorUnitario" : valorUnit,
+            "importe" : importe,
+            "importeImpuesto" : importeImp,
+            "impuesto" : impuesto,
+            "tasa" : tasa,
+            "unidad" : unidad,
+            "tipoFactor" : tipoFactor,
+            "claveProdServ" : clavePS,
+            "base" : base
+        }
+    ]
